@@ -100,7 +100,7 @@ body {
 
 .sidebar.collapsed {
   transform: translateX(-100%);
-  width: 0;
+  margin-left: calc(-1 * var(--sidebar-width));
   border-right-color: transparent;
   pointer-events: none;
 }
