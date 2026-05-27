@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MySpace // Your Personal Cosmos</title>
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="/src/css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <div class="user-profile">
+          <div class="user-avatar" id="user-avatar-btn">📓</div>
+          <div class="user-info">
+            <span class="user-name">Personal Space</span>
+            <span class="user-status">Active</span>
+          </div>
+        </div>
+        <button class="sidebar-toggle-btn" id="sidebar-collapse-btn" title="Collapse Sidebar">
+          <i data-lucide="chevron-left"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Workspace</div>
+        <a href="#dashboard" class="nav-item active" data-view="dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#todo" class="nav-item" data-view="todo">
+          <i data-lucide="kanban-square"></i>
+          <span>To-Do Board</span>
+        </a>
+        <a href="#canvas" class="nav-item" data-view="canvas">
+          <i data-lucide="layout-grid"></i>
+          <span>Sandbox Canvas</span>
+        </a>
+        <a href="#journal" class="nav-item" data-view="journal">
+          <i data-lucide="message-square"></i>
+          <span>Project Log</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="version-tag">
+          <i data-lucide="book-open"></i>
+          <span>MySpace v1.0.0</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Content -->
+    <main class="main-content">
+      <!-- Notion Cover Banner -->
+      <div class="cover-banner-wrapper" id="cover-banner-container">
+        <div class="cover-image" id="cover-banner-img" style="background-image: url('https://images.unsplash.com/photo-1486873249359-2731bd6dafc7?q=80&w=1600&auto=format&fit=crop');"></div>
+        <div class="cover-actions">
+          <button class="cover-action-btn" id="change-cover-btn">
+            <i data-lucide="image"></i>
+            <span>Change Cover</span>
+          </button>
+          <!-- Cover Presets Dropdown -->
+          <div class="cover-dropdown hide" id="cover-dropdown-menu">
+            <button class="cover-preset" data-img="https://images.unsplash.com/photo-1486873249359-2731bd6dafc7?q=80&w=1600&auto=format&fit=crop">Foggy Forest</button>
+            <button class="cover-preset" data-img="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=1600&auto=format&fit=crop">Dune Shadows</button>
+            <button class="cover-preset" data-img="https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600&auto=format&fit=crop">Concrete Lines</button>
+            <button class="cover-preset" data-img="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=1600&auto=format&fit=crop">Minimal Office</button>
+            <button class="cover-preset" data-img="https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1600&auto=format&fit=crop">Solid Gray</button>
+          </div>
+        </div>
+      </div>iv>
+
+      <!-- Workspace Page Header (Floating Icon & Title) -->
+      <header class="workspace-header">
+        <div class="workspace-icon-wrapper">
+          <div class="workspace-icon" id="page-emoji-btn" title="Change Icon">🚀</div>
+          <!-- Emoji Picker Panel -->
+          <div class="emoji-picker hide" id="emoji-picker-menu">
+            <div class="emoji-list">
+              <span>🚀</span><span>🛰️</span><span>☄️</span><span>🌌</span><span>⭐</span><span>🔭</span><span>🪐</span>
+              <span>🛸</span><span>👽</span><span>👾</span><span>💻</span><span>📝</span><span>🎯</span><span>💡</span>
+              <span>🔥</span><span>⚡</span><span>🛠️</span><span>📊</span><span>📂</span><span>🎨</span><span>🔮</span>
+            </div>
+          </div>
+        </div>
+        <div class="workspace-title-area">
+          <h1 class="workspace-title" id="page-title-text" contenteditable="true" spellcheck="false">Dashboard</h1>
+          <span class="workspace-subtitle" id="page-subtitle-text">Your personal control center. Only you exist here.</span>
+        </div>
+        
+        <!-- Toggle button to expand sidebar if collapsed -->
+        <button class="sidebar-expand-btn hide" id="sidebar-expand-btn" title="Expand Sidebar">
+          <i data-lucide="menu"></i>
+        </button>
+      </header>
+
+      <!-- View Containers -->
+      <div class="view-container">
+        
+        <!-- VIEW: DASHBOARD -->
+        <section id="dashboard-view" class="workspace-view">
+          <div class="dashboard-grid">
+            <!-- Greeting & Clock Glass Card -->
+            <div class="glass-card greeting-card col-span-2">
+              <div class="clock-display">
+                <span class="time" id="dashboard-time">12:00:00</span>
+                <span class="date" id="dashboard-date">Wednesday, May 27</span>
+              </div>
+              <h2 class="welcome-text" id="dashboard-greeting">Welcome back, Traveler.</h2>
+              <p class="motivational-quote">"The cosmos is within us. We are made of star-stuff."</p>
+            </div>
+
+            <!-- Stats Mini Cards -->
+            <div class="glass-card stat-card">
+              <div class="stat-header">
+                <span class="stat-title">To-Do Completion</span>
+                <i data-lucide="check-circle" class="cyan-icon"></i>
+              </div>
+              <div class="stat-main">
+                <span class="stat-value" id="todo-completion-rate">0%</span>
+                <div class="progress-bar-container">
+                  <div class="progress-bar-fill" id="todo-progress-bar" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="stat-footer" id="todo-completion-fraction">0 / 0 tasks completed</div>
+            </div>
+
+            <div class="glass-card stat-card">
+              <div class="stat-header">
+                <span class="stat-title">Canvas Blocks</span>
+                <i data-lucide="layers" class="magenta-icon"></i>
+              </div>
+              <div class="stat-main">
+                <span class="stat-value" id="canvas-blocks-count">0</span>
+              </div>
+              <div class="stat-footer">Items on Sandbox Canvas</div>
+            </div>
+
+            <!-- Chart Card -->
+            <div class="glass-card chart-card col-span-2">
+              <h3>Task Status Distribution</h3>
+              <div class="chart-container">
+                <canvas id="taskDistributionChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Journal Recent Activity Card -->
+            <div class="glass-card log-preview-card">
+              <h3>Latest Logs</h3>
+              <div class="recent-logs-list" id="dashboard-recent-logs">
+                <div class="empty-state">No logs added yet. Head to the Project Log to add your updates.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: TO-DO BOARD (KANBAN) -->
+        <section id="todo-view" class="workspace-view hide">
+          <div class="todo-board-actions">
+            <button class="primary-btn" id="new-task-btn">
+              <i data-lucide="plus"></i>
+              <span>Add Task</span>
+            </button>
+          </div>
+
+          <div class="kanban-board">
+            <!-- COLUMN: WAITING -->
+            <div class="kanban-column" data-status="waiting">
+              <div class="column-header">
+                <span class="column-pill count-waiting">0</span>
+                <h3 class="column-title">Waiting</h3>
+              </div>
+              <div class="column-cards" id="cards-waiting"></div>
+            </div>
+
+            <!-- COLUMN: DOING -->
+            <div class="kanban-column" data-status="doing">
+              <div class="column-header">
+                <span class="column-pill count-doing">0</span>
+                <h3 class="column-title">Doing</h3>
+              </div>
+              <div class="column-cards" id="cards-doing"></div>
+            </div>
+
+            <!-- COLUMN: PARTIAL COMPLETE -->
+            <div class="kanban-column" data-status="partial">
+              <div class="column-header">
+                <span class="column-pill count-partial">0</span>
+                <h3 class="column-title">Partial Complete</h3>
+              </div>
+              <div class="column-cards" id="cards-partial"></div>
+            </div>
+
+            <!-- COLUMN: COMPLETED -->
+            <div class="kanban-column" data-status="completed">
+              <div class="column-header">
+                <span class="column-pill count-completed">0</span>
+                <h3 class="column-title">Completed</h3>
+              </div>
+              <div class="column-cards" id="cards-completed"></div>
+            </div>
+          </div>
+
+          <!-- Task Modal -->
+          <div class="modal-overlay hide" id="task-modal">
+            <div class="glass-card modal-container">
+              <div class="modal-header">
+                <h3 id="modal-title-text">Create Task</h3>
+                <button class="close-modal-btn" id="close-task-modal-btn">
+                  <i data-lucide="x"></i>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" id="task-id-input">
+                
+                <div class="form-group">
+                  <label for="task-title-input">Title</label>
+                  <input type="text" id="task-title-input" placeholder="What needs to be done?" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="task-desc-input">Description</label>
+                  <textarea id="task-desc-input" rows="3" placeholder="Provide some details..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group flex-1">
+                    <label for="task-status-input">Status</label>
+                    <select id="task-status-input">
+                      <option value="waiting">Waiting</option>
+                      <option value="doing">Doing</option>
+                      <option value="partial">Partial Complete</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group flex-1">
+                    <label for="task-priority-input">Priority</label>
+                    <select id="task-priority-input">
+                      <option value="low">Low</option>
+                      <option value="medium" selected>Medium</option>
+                      <option value="high">High</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group flex-1">
+                    <label for="task-tags-input">Tags (comma separated)</label>
+                    <input type="text" id="task-tags-input" placeholder="e.g. design, dev, research">
+                  </div>
+                  
+                  <div class="form-group flex-1">
+                    <label for="task-date-input">Due Date</label>
+                    <input type="date" id="task-date-input">
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="secondary-btn" id="delete-task-btn">Delete</button>
+                <button class="primary-btn" id="save-task-btn">Save Task</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: SANDBOX CANVAS -->
+        <section id="canvas-view" class="workspace-view hide">
+          <div class="canvas-toolbar">
+            <div class="toolbar-group">
+              <button class="toolbar-btn" id="add-text-block-btn" title="Add Text Block">
+                <i data-lucide="file-text"></i>
+                <span>Sticky Note</span>
+              </button>
+              <button class="toolbar-btn" id="add-graph-block-btn" title="Add Graph Block">
+                <i data-lucide="line-chart"></i>
+                <span>Graph Card</span>
+              </button>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-group">
+              <button class="toolbar-btn text-danger" id="clear-canvas-btn" title="Clear Canvas">
+                <i data-lucide="trash-2"></i>
+                <span>Clear All</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- The Infinite Canvas Area -->
+          <div class="canvas-container">
+            <div class="canvas-grid" id="sandbox-canvas">
+              <!-- Draggable widgets will be inserted dynamically here -->
+            </div>
+          </div>
+
+          <!-- Graph Customizer Modal -->
+          <div class="modal-overlay hide" id="graph-config-modal">
+            <div class="glass-card modal-container">
+              <div class="modal-header">
+                <h3>Configure Graph</h3>
+                <button class="close-modal-btn" id="close-graph-modal-btn">
+                  <i data-lucide="x"></i>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" id="graph-widget-id-input">
+                
+                <div class="form-group">
+                  <label for="graph-title-input">Graph Title</label>
+                  <input type="text" id="graph-title-input" placeholder="e.g. Monthly Revenue">
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group flex-1">
+                    <label for="graph-type-input">Graph Type</label>
+                    <select id="graph-type-input">
+                      <option value="bar">Bar Chart</option>
+                      <option value="line">Line Chart</option>
+                      <option value="pie">Pie Chart</option>
+                    </select>
+                  </div>
+                  <div class="form-group flex-1">
+                    <label for="graph-color-input">Color Palette</label>
+                    <select id="graph-color-input">
+                      <option value="neon">Neon Star</option>
+                      <option value="emerald">Emerald Forest</option>
+                      <option value="sunset">Sunset Glow</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Data Points</label>
+                  <div class="data-points-list" id="data-points-container">
+                    <!-- Dynamic label-value inputs -->
+                  </div>
+                  <button class="secondary-btn btn-sm" id="add-data-point-btn" style="margin-top: 8px;">
+                    <i data-lucide="plus"></i> Add Point
+                  </button>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="primary-btn" id="save-graph-config-btn">Save Graph</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: PROJECT LOG (CHAT) -->
+        <section id="journal-view" class="workspace-view hide">
+          <div class="journal-layout">
+            <div class="journal-feed-area">
+              <!-- Update Input Area -->
+              <div class="glass-card chat-input-card">
+                <div class="chat-input-wrapper">
+                  <textarea id="chat-input" rows="2" placeholder="Post a project update, record a breakthrough, or share an idea... Use #tags to categorize."></textarea>
+                  <div class="chat-input-actions">
+                    <div class="quick-tags-container">
+                      <button class="quick-tag-btn" data-tag="update">#update</button>
+                      <button class="quick-tag-btn" data-tag="idea">#idea</button>
+                      <button class="quick-tag-btn" data-tag="milestone">#milestone</button>
+                      <button class="quick-tag-btn" data-tag="bug">#bug</button>
+                    </div>
+                    <button class="primary-btn" id="send-chat-btn">
+                      <i data-lucide="send"></i>
+                      <span>Log Update</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Message Stream -->
+              <div class="chat-stream" id="chat-stream-container">
+                <!-- Chat log messages inserted here -->
+              </div>
+            </div>
+
+            <!-- Journal Sidebar (Search & Statistics) -->
+            <div class="journal-sidebar">
+              <div class="glass-card sidebar-search-card">
+                <div class="search-input-wrapper">
+                  <i data-lucide="search"></i>
+                  <input type="text" id="journal-search-input" placeholder="Search logs or tags...">
+                </div>
+              </div>
+
+              <div class="glass-card tags-list-card">
+                <h3>Trending Tags</h3>
+                <div class="tags-cloud" id="journal-tags-cloud">
+                  <!-- Interactive tag buttons -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Main JS Loader -->
+  <script type="module" src="/src/js/main.js"></script>
+</body>
+</html>
