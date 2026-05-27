@@ -49,7 +49,7 @@
   margin: 0;
   padding: 0;
   scrollbar-width: thin;
-  scrollbar-color: rgba(55, 53, 47, 0.15) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
 body {
@@ -69,11 +69,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(55, 53, 47, 0.12);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(55, 53, 47, 0.25);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 /* Common Layout Shell */
@@ -123,7 +123,7 @@ body {
   font-size: 20px;
   width: 34px;
   height: 34px;
-  background: rgba(55, 53, 47, 0.05);
+  background: rgba(255, 255, 255, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -134,7 +134,7 @@ body {
 }
 
 .user-avatar:hover {
-  background: rgba(55, 53, 47, 0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .user-info {
@@ -295,7 +295,7 @@ body {
 }
 
 .cover-action-btn {
-  background: #ffffff;
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   color: var(--text-primary);
   padding: 6px 12px;
@@ -306,20 +306,20 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 1px 2px rgba(15, 15, 15, 0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   transition: var(--transition-smooth);
 }
 
 .cover-action-btn:hover {
-  background: #f7f7f5;
-  border-color: #d3d2ce;
+  background: var(--bg-active);
+  border-color: var(--glass-border-focus);
 }
 
 .cover-dropdown {
   position: absolute;
   top: calc(100% + 5px);
   right: 0;
-  background: #ffffff;
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 6px;
   padding: 6px;
@@ -345,7 +345,7 @@ body {
 }
 
 .cover-preset:hover {
-  background: rgba(55, 53, 47, 0.05);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
 }
 
@@ -391,7 +391,7 @@ body {
   position: absolute;
   top: 100%;
   left: 0;
-  background: #ffffff;
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 6px;
   padding: 12px;
@@ -416,7 +416,7 @@ body {
 }
 
 .emoji-list span:hover {
-  background: rgba(55, 53, 47, 0.06);
+  background: rgba(255, 255, 255, 0.06);
   transform: scale(1.1);
 }
 
@@ -451,7 +451,7 @@ body {
   position: absolute;
   top: 20px;
   left: 10px;
-  background: #ffffff;
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   color: var(--text-muted);
   width: 32px;
@@ -473,7 +473,7 @@ body {
 
 /* Card Design System */
 .glass-card {
-  background: #ffffff;
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: var(--border-radius);
   padding: 20px;
@@ -484,7 +484,7 @@ body {
 }
 
 .glass-card:hover {
-  border-color: #d3d2ce;
+  border-color: var(--glass-border-focus);
 }
 
 /* Interactive form inputs */
@@ -543,7 +543,7 @@ label {
 }
 
 .secondary-btn {
-  background: #ffffff;
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 4px;
   color: var(--text-primary);
@@ -554,12 +554,12 @@ label {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 1px 2px rgba(15, 15, 15, 0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   transition: var(--transition-smooth);
 }
 
 .secondary-btn:hover {
-  background: #f7f7f5;
+  background: var(--bg-active);
 }
 
 .btn-sm {
@@ -622,7 +622,7 @@ label {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: #f7f7f5;
+  background: var(--bg-sidebar);
   border: 1px solid var(--glass-border);
   border-left: 4px solid var(--text-muted);
 }
@@ -702,7 +702,7 @@ label {
 .progress-bar-container {
   width: 100%;
   height: 6px;
-  background: rgba(55, 53, 47, 0.08);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 3px;
   margin-top: 8px;
   overflow: hidden;
@@ -748,7 +748,7 @@ label {
 .dashboard-log-item {
   padding: 10px 12px;
   border-left: 3px solid var(--accent-blue);
-  background: #f7f7f5;
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-left-width: 3px;
   border-left-color: var(--accent-blue);
@@ -791,7 +791,7 @@ label {
 .kanban-column {
   display: flex;
   flex-direction: column;
-  background: #f7f7f5;
+  background: var(--bg-sidebar);
   border: 1px solid var(--glass-border);
   border-radius: var(--border-radius);
   padding: 12px;
@@ -822,11 +822,11 @@ label {
   font-weight: 700;
   padding: 2px 6px;
   border-radius: 10px;
-  background: rgba(55, 53, 47, 0.08);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--text-primary);
 }
 
-.count-waiting { border: 1px solid rgba(55, 53, 47, 0.15); color: var(--text-muted); }
+.count-waiting { border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-muted); }
 .count-doing { border: 1px solid var(--accent-blue); color: var(--accent-blue); }
 .count-partial { border: 1px solid var(--accent-yellow); color: var(--accent-yellow); }
 .count-completed { border: 1px solid var(--accent-green); color: var(--accent-green); }
@@ -843,7 +843,7 @@ label {
 
 /* Kanban Cards (Notion Board Items) */
 .todo-card {
-  background: #ffffff;
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 4px;
   padding: 14px;
@@ -899,7 +899,7 @@ label {
   font-weight: 500;
   padding: 1px 6px;
   border-radius: 3px;
-  background: rgba(55, 53, 47, 0.08);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--text-primary);
 }
 
@@ -966,9 +966,9 @@ label {
 .modal-container {
   width: 500px;
   max-width: 90%;
-  background: #ffffff;
+  background: var(--bg-sidebar);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 4px 16px rgba(15, 15, 15, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   border-radius: 6px;
   padding: 24px;
 }
@@ -999,7 +999,7 @@ label {
 }
 
 .close-modal-btn:hover {
-  background: rgba(55, 53, 47, 0.06);
+  background: var(--bg-active);
   color: var(--text-primary);
 }
 
@@ -1036,7 +1036,7 @@ label {
    VIEW 3: SANDBOX CANVAS
    ========================================================================== */
 .canvas-toolbar {
-  background: #ffffff;
+  background: var(--bg-sidebar);
   border: 1px solid var(--glass-border);
   padding: 6px 12px;
   border-radius: 6px;
@@ -1069,7 +1069,7 @@ label {
 }
 
 .toolbar-btn:hover {
-  background: rgba(55, 53, 47, 0.05);
+  background: var(--bg-active);
   color: var(--text-primary);
 }
 
@@ -1092,7 +1092,7 @@ label {
   border-radius: var(--border-radius);
   overflow: hidden;
   position: relative;
-  background: #fbfbfa;
+  background: var(--bg-deep-space);
 }
 
 .canvas-grid {
@@ -1103,8 +1103,8 @@ label {
   left: 0;
   background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(55, 53, 47, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(55, 53, 47, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
 }
 
 /* Canvas Draggable Blocks */
@@ -1118,7 +1118,7 @@ label {
   display: flex;
   flex-direction: column;
   user-select: none;
-  background: #ffffff;
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 4px;
   box-shadow: var(--box-shadow);
@@ -1174,7 +1174,7 @@ label {
 }
 
 .widget-btn:hover {
-  background: rgba(55, 53, 47, 0.05);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
 }
 
@@ -1201,28 +1201,28 @@ label {
   width: 15px;
   height: 15px;
   cursor: se-resize;
-  background: linear-gradient(135deg, transparent 50%, rgba(55, 53, 47, 0.15) 50%);
+  background: linear-gradient(135deg, transparent 50%, rgba(255, 255, 255, 0.15) 50%);
   border-radius: 0 0 4px 0;
 }
 
 /* Sticky Note specific widget colors */
 .widget-sticky {
-  background: #f2ecf9;
-  border-color: #e8deee;
+  background: #2b243c;
+  border-color: #483765;
 }
-.widget-sticky .widget-title { color: #6b4095; }
+.widget-sticky .widget-title { color: #d8b4fe; }
 
 .widget-sticky-emerald {
-  background: #edf3ec;
-  border-color: #d4e2d1;
+  background: #1c2b24;
+  border-color: #2c4639;
 }
-.widget-sticky-emerald .widget-title { color: #448361; }
+.widget-sticky-emerald .widget-title { color: #6bb38a; }
 
 .widget-sticky-sunset {
-  background: #fbf3db;
-  border-color: #f4dfb5;
+  background: #35291e;
+  border-color: #563e26;
 }
-.widget-sticky-sunset .widget-title { color: #cb932a; }
+.widget-sticky-sunset .widget-title { color: #f3c262; }
 
 /* Sticky color switcher options */
 .color-picker-trigger {
@@ -1233,7 +1233,7 @@ label {
   position: absolute;
   top: 100%;
   right: 0;
-  background: #ffffff;
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 4px;
   padding: 4px;
@@ -1298,7 +1298,7 @@ label {
 }
 
 .connection-delete-btn circle {
-  fill: #ffffff;
+  fill: var(--glass-bg);
   stroke: var(--glass-border);
   transition: fill 0.2s, stroke 0.2s;
 }
@@ -1388,7 +1388,7 @@ label {
 }
 
 .quick-tag-btn {
-  background: rgba(55, 53, 47, 0.05);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--glass-border);
   color: var(--text-muted);
   font-size: 11px;
@@ -1400,7 +1400,7 @@ label {
 }
 
 .quick-tag-btn:hover {
-  background: rgba(55, 53, 47, 0.1);
+  background: rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
   border-color: var(--glass-border-focus);
 }
@@ -1530,7 +1530,7 @@ label {
 }
 
 .trend-tag-btn {
-  background: #ffffff;
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   color: var(--text-primary);
   font-size: 12px;
@@ -1553,7 +1553,7 @@ label {
 
 .trend-tag-count {
   font-size: 10px;
-  background: rgba(55, 53, 47, 0.08);
+  background: rgba(255, 255, 255, 0.08);
   padding: 1px 5px;
   border-radius: 10px;
   color: var(--text-muted);
