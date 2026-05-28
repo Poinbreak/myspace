@@ -15,133 +15,215 @@ Before starting, ensure you have the following CLI tools installed:
 
 ---
 
-## Step 1: Create Amazon ECR Repository & Push Image
+## Step 1: Set Your Environment Variables
 
-Amazon ECR is a managed container registry. We will build our Docker image locally and push it to ECR.
+Environment variables are stored in your active terminal session. Choose the instructions for the terminal you are using:
 
-1. **Set your environment variables** (replace placeholders):
-   ```bash
-   AWS_REGION="us-east-1"
-   AWS_ACCOUNT_ID="123456789012" # Run `aws sts get-caller-identity --query Account --output text`
-   REPO_NAME="myspace"
-   ```
+### Option A: Windows PowerShell (Recommended for Windows)
 
-2. **Authenticate Docker to your ECR registry**:
-   ```bash
-   aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-   ```
+In PowerShell, variables are declared with a `$` prefix. Copy and run the following lines (replace with your actual AWS account ID and desired region):
 
-3. **Create the ECR Repository**:
-   ```bash
-   aws ecr create-repository \
-     --repository-name $REPO_NAME \
-     --region $AWS_REGION \
-     --image-scanning-configuration scanOnPush=true \
-     --encryption-configuration encryptionType=AES256
-   ```
+```powershell
+$AWS_REGION="us-east-1"
+$AWS_ACCOUNT_ID="123456789012"  # Find yours by running: aws sts get-caller-identity --query Account --output text
+$REPO_NAME="myspace"
+```
 
-4. **Build, Tag, and Push the Docker image**:
-   ```bash
-   # Build the image using the local Dockerfile
-   docker build -t $REPO_NAME .
+To verify they are set, you can run:
+```powershell
+echo $AWS_REGION
+echo $AWS_ACCOUNT_ID
+echo $REPO_NAME
+```
 
-   # Tag the image for your ECR repository
-   docker tag $REPO_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest
+### Option B: Bash / Git Bash (Linux, macOS, Git Bash on Windows)
 
-   # Push to ECR
-   docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest
-   ```
+In Bash, variables are exported without the `$` prefix, but referenced with it:
+
+```bash
+export AWS_REGION="us-east-1"
+export AWS_ACCOUNT_ID="123456789012"  # Find yours by running: aws sts get-caller-identity --query Account --output text
+export REPO_NAME="myspace"
+```
+
+To verify they are set, you can run:
+```bash
+echo $AWS_REGION
+echo $AWS_ACCOUNT_ID
+echo $REPO_NAME
+```
 
 ---
 
-## Step 2: Provision the EKS Cluster
+## Step 2: Create Amazon ECR Repository & Push Image
+
+We will build our Docker image locally and push it to ECR.
+
+### 1. Authenticate Docker to ECR
+
+* **PowerShell (Windows):**
+  ```powershell
+  aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+  ```
+* **Bash (Linux/Mac/Git Bash):**
+  ```bash
+  aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+  ```
+
+### 2. Create the ECR Repository
+
+* **PowerShell (Windows):**
+  ```powershell
+  aws ecr create-repository --repository-name $REPO_NAME --region $AWS_REGION --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=AES256
+  ```
+* **Bash (Linux/Mac/Git Bash):**
+  ```bash
+  aws ecr create-repository \
+    --repository-name $REPO_NAME \
+    --region $AWS_REGION \
+    --image-scanning-configuration scanOnPush=true \
+    --encryption-configuration encryptionType=AES256
+  ```
+
+### 3. Build, Tag, and Push the Docker Image
+
+* **PowerShell (Windows):**
+  ```powershell
+  # Build the image using the local Dockerfile
+  docker build -t $REPO_NAME .
+
+  # Tag the image for your ECR repository
+  docker tag "$REPO_NAME:latest" "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest"
+
+  # Push to ECR
+  docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest"
+  ```
+* **Bash (Linux/Mac/Git Bash):**
+  ```bash
+  # Build the image using the local Dockerfile
+  docker build -t $REPO_NAME .
+
+  # Tag the image for your ECR repository
+  docker tag $REPO_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest
+
+  # Push to ECR
+  docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest
+  ```
+
+---
+
+## Step 3: Provision the EKS Cluster
 
 We will use `eksctl` to provision a cluster with a managed node group.
 
-1. **Create the cluster**:
-   ```bash
-   eksctl create cluster \
-     --name myspace-cluster \
-     --region $AWS_REGION \
-     --nodegroup-name standard-workers \
-     --node-type t3.medium \
-     --nodes 2 \
-     --nodes-min 1 \
-     --nodes-max 3 \
-     --managed
-   ```
-   *Note: This command will take 15–20 minutes to complete as it spins up CloudFormation stacks, VPCs, and EC2 instances.*
+### 1. Create the Cluster
 
-2. **Configure your local kubeconfig** (if not done automatically):
-   ```bash
-   aws eks update-kubeconfig --name myspace-cluster --region $AWS_REGION
-   ```
+* **PowerShell (Windows):**
+  ```powershell
+  eksctl create cluster --name myspace-cluster --region $AWS_REGION --nodegroup-name standard-workers --node-type t3.medium --nodes 2 --nodes-min 1 --nodes-max 3 --managed
+  ```
+* **Bash (Linux/Mac/Git Bash):**
+  ```bash
+  eksctl create cluster \
+    --name myspace-cluster \
+    --region $AWS_REGION \
+    --nodegroup-name standard-workers \
+    --node-type t3.medium \
+    --nodes 2 \
+    --nodes-min 1 \
+    --nodes-max 3 \
+    --managed
+  ```
+  *Note: This command will take 15–20 minutes to complete as it spins up CloudFormation stacks, VPCs, and EC2 instances.*
 
-3. **Verify node status**:
-   ```bash
-   kubectl get nodes
-   ```
+### 2. Configure Local Kubeconfig (if not done automatically)
+
+* **PowerShell (Windows):**
+  ```powershell
+  aws eks update-kubeconfig --name myspace-cluster --region $AWS_REGION
+  ```
+* **Bash (Linux/Mac/Git Bash):**
+  ```bash
+  aws eks update-kubeconfig --name myspace-cluster --region $AWS_REGION
+  ```
+
+### 3. Verify Node Status
+```bash
+kubectl get nodes
+```
 
 ---
 
-## Step 3: Install AWS Load Balancer Controller
+## Step 4: Install AWS Load Balancer Controller
 
 The Application Load Balancer (ALB) is provisioned via the AWS Load Balancer Controller.
 
-1. **Associate IAM OIDC Provider** with your EKS cluster:
-   ```bash
-   eksctl utils associate-iam-oidc-provider \
-     --cluster myspace-cluster \
-     --region $AWS_REGION \
-     --approve
-   ```
+### 1. Associate IAM OIDC Provider with your EKS cluster
 
-2. **Download the IAM policy** for the Load Balancer Controller:
-   ```bash
-   curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.7.2/docs/install/iam_policy.json
-   ```
+* **PowerShell (Windows):**
+  ```powershell
+  eksctl utils associate-iam-oidc-provider --cluster myspace-cluster --region $AWS_REGION --approve
+  ```
+* **Bash (Linux/Mac/Git Bash):**
+  ```bash
+  eksctl utils associate-iam-oidc-provider \
+    --cluster myspace-cluster \
+    --region $AWS_REGION \
+    --approve
+  ```
 
-3. **Create the IAM Policy** in AWS:
-   ```bash
-   aws iam create-policy \
-     --policy-name AWSLoadBalancerControllerIAMPolicy \
-     --policy-document file://iam_policy.json
-   ```
+### 2. Download the IAM Policy for the Controller
+```bash
+curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.7.2/docs/install/iam_policy.json
+```
 
-4. **Create a ServiceAccount** and bind it to a new IAM Role:
-   ```bash
-   eksctl create iamserviceaccount \
-     --cluster=myspace-cluster \
-     --namespace=kube-system \
-     --name=aws-load-balancer-controller \
-     --role-name AmazonEKSLoadBalancerControllerRole \
-     --attach-policy-arn=arn:aws:iam::$AWS_ACCOUNT_ID:policy/AWSLoadBalancerControllerIAMPolicy \
-     --approve \
-     --region $AWS_REGION
-   ```
+### 3. Create the IAM Policy in AWS
+```bash
+aws iam create-policy \
+  --policy-name AWSLoadBalancerControllerIAMPolicy \
+  --policy-document file://iam_policy.json
+```
 
-5. **Install the controller** using Helm:
-   ```bash
-   # Add target Helm repo
-   helm repo add eks https://aws.github.io/eks-charts
-   helm repo update
+### 4. Create ServiceAccount & Bind to IAM Role
 
-   # Install AWS Load Balancer Controller
-   helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
-     -n kube-system \
-     --set clusterName=myspace-cluster \
-     --set serviceAccount.create=false \
-     --set serviceAccount.name=aws-load-balancer-controller
-   ```
+* **PowerShell (Windows):**
+  ```powershell
+  eksctl create iamserviceaccount --cluster=myspace-cluster --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy-arn="arn:aws:iam::${AWS_ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy" --approve --region $AWS_REGION
+  ```
+* **Bash (Linux/Mac/Git Bash):**
+  ```bash
+  eksctl create iamserviceaccount \
+    --cluster=myspace-cluster \
+    --namespace=kube-system \
+    --name=aws-load-balancer-controller \
+    --role-name AmazonEKSLoadBalancerControllerRole \
+    --attach-policy-arn=arn:aws:iam::$AWS_ACCOUNT_ID:policy/AWSLoadBalancerControllerIAMPolicy \
+    --approve \
+    --region $AWS_REGION
+  ```
 
-6. **Verify the installation**:
-   ```bash
-   kubectl get deployment -n kube-system aws-load-balancer-controller
-   ```
+### 5. Install the Controller using Helm
+```bash
+# Add target Helm repo
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update
+
+# Install AWS Load Balancer Controller
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  -n kube-system \
+  --set clusterName=myspace-cluster \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller
+```
+
+### 6. Verify the Installation
+```bash
+kubectl get deployment -n kube-system aws-load-balancer-controller
+```
 
 ---
 
-## Step 4: Deploy the Application
+## Step 5: Deploy the Application
 
 1. **Update the container image** in `k8s/deployment.yaml`. Replace the placeholder:
    ```yaml
@@ -170,17 +252,29 @@ The Application Load Balancer (ALB) is provisioned via the AWS Load Balancer Con
 
 ---
 
-## Step 5: Clean Up Resources
+## Step 6: Clean Up Resources
 
 To avoid incurring ongoing AWS charges, clean up the cluster and ECR repository when you are done:
 
-```bash
-# 1. Delete Kubernetes resources (removes ALB)
-kubectl delete -f k8s/
+* **PowerShell (Windows):**
+  ```powershell
+  # 1. Delete Kubernetes resources (removes ALB)
+  kubectl delete -f k8s/
 
-# 2. Delete EKS Cluster
-eksctl delete cluster --name myspace-cluster --region $AWS_REGION
+  # 2. Delete EKS Cluster
+  eksctl delete cluster --name myspace-cluster --region $AWS_REGION
 
-# 3. Delete ECR Repository
-aws ecr delete-repository --repository-name $REPO_NAME --force --region $AWS_REGION
-```
+  # 3. Delete ECR Repository
+  aws ecr delete-repository --repository-name $REPO_NAME --force --region $AWS_REGION
+  ```
+* **Bash (Linux/Mac/Git Bash):**
+  ```bash
+  # 1. Delete Kubernetes resources (removes ALB)
+  kubectl delete -f k8s/
+
+  # 2. Delete EKS Cluster
+  eksctl delete cluster --name myspace-cluster --region $AWS_REGION
+
+  # 3. Delete ECR Repository
+  aws ecr delete-repository --repository-name $REPO_NAME --force --region $AWS_REGION
+  ```
