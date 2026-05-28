@@ -63,24 +63,24 @@ We will build our Docker image locally and push it to ECR.
 
 * **PowerShell (Windows):**
   ```powershell
-  aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+  aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
   ```
 * **Bash (Linux/Mac/Git Bash):**
   ```bash
-  aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+  aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
   ```
 
 ### 2. Create the ECR Repository
 
 * **PowerShell (Windows):**
   ```powershell
-  aws ecr create-repository --repository-name $REPO_NAME --region $AWS_REGION --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=AES256
+  aws ecr create-repository --repository-name ${REPO_NAME} --region ${AWS_REGION} --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=AES256
   ```
 * **Bash (Linux/Mac/Git Bash):**
   ```bash
   aws ecr create-repository \
-    --repository-name $REPO_NAME \
-    --region $AWS_REGION \
+    --repository-name ${REPO_NAME} \
+    --region ${AWS_REGION} \
     --image-scanning-configuration scanOnPush=true \
     --encryption-configuration encryptionType=AES256
   ```
@@ -90,24 +90,24 @@ We will build our Docker image locally and push it to ECR.
 * **PowerShell (Windows):**
   ```powershell
   # Build the image using the local Dockerfile
-  docker build -t $REPO_NAME .
+  docker build -t ${REPO_NAME} .
 
   # Tag the image for your ECR repository
-  docker tag "$REPO_NAME:latest" "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest"
+  docker tag "${REPO_NAME}:latest" "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:latest"
 
   # Push to ECR
-  docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest"
+  docker push "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:latest"
   ```
 * **Bash (Linux/Mac/Git Bash):**
   ```bash
   # Build the image using the local Dockerfile
-  docker build -t $REPO_NAME .
+  docker build -t ${REPO_NAME} .
 
   # Tag the image for your ECR repository
-  docker tag $REPO_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest
+  docker tag ${REPO_NAME}:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:latest
 
   # Push to ECR
-  docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest
+  docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:latest
   ```
 
 ---
@@ -120,13 +120,13 @@ We will use `eksctl` to provision a cluster with a managed node group.
 
 * **PowerShell (Windows):**
   ```powershell
-  eksctl create cluster --name myspace-cluster --region $AWS_REGION --nodegroup-name standard-workers --node-type t3.medium --nodes 2 --nodes-min 1 --nodes-max 3 --managed
+  eksctl create cluster --name myspace-cluster --region ${AWS_REGION} --nodegroup-name standard-workers --node-type t3.medium --nodes 2 --nodes-min 1 --nodes-max 3 --managed
   ```
 * **Bash (Linux/Mac/Git Bash):**
   ```bash
   eksctl create cluster \
     --name myspace-cluster \
-    --region $AWS_REGION \
+    --region ${AWS_REGION} \
     --nodegroup-name standard-workers \
     --node-type t3.medium \
     --nodes 2 \
@@ -140,11 +140,11 @@ We will use `eksctl` to provision a cluster with a managed node group.
 
 * **PowerShell (Windows):**
   ```powershell
-  aws eks update-kubeconfig --name myspace-cluster --region $AWS_REGION
+  aws eks update-kubeconfig --name myspace-cluster --region ${AWS_REGION}
   ```
 * **Bash (Linux/Mac/Git Bash):**
   ```bash
-  aws eks update-kubeconfig --name myspace-cluster --region $AWS_REGION
+  aws eks update-kubeconfig --name myspace-cluster --region ${AWS_REGION}
   ```
 
 ### 3. Verify Node Status
@@ -162,13 +162,13 @@ The Application Load Balancer (ALB) is provisioned via the AWS Load Balancer Con
 
 * **PowerShell (Windows):**
   ```powershell
-  eksctl utils associate-iam-oidc-provider --cluster myspace-cluster --region $AWS_REGION --approve
+  eksctl utils associate-iam-oidc-provider --cluster myspace-cluster --region ${AWS_REGION} --approve
   ```
 * **Bash (Linux/Mac/Git Bash):**
   ```bash
   eksctl utils associate-iam-oidc-provider \
     --cluster myspace-cluster \
-    --region $AWS_REGION \
+    --region ${AWS_REGION} \
     --approve
   ```
 
@@ -188,7 +188,7 @@ aws iam create-policy \
 
 * **PowerShell (Windows):**
   ```powershell
-  eksctl create iamserviceaccount --cluster=myspace-cluster --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy-arn="arn:aws:iam::${AWS_ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy" --approve --region $AWS_REGION
+  eksctl create iamserviceaccount --cluster=myspace-cluster --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy-arn="arn:aws:iam::${AWS_ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy" --approve --region ${AWS_REGION}
   ```
 * **Bash (Linux/Mac/Git Bash):**
   ```bash
@@ -197,9 +197,9 @@ aws iam create-policy \
     --namespace=kube-system \
     --name=aws-load-balancer-controller \
     --role-name AmazonEKSLoadBalancerControllerRole \
-    --attach-policy-arn=arn:aws:iam::$AWS_ACCOUNT_ID:policy/AWSLoadBalancerControllerIAMPolicy \
+    --attach-policy-arn=arn:aws:iam::${AWS_ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy \
     --approve \
-    --region $AWS_REGION
+    --region ${AWS_REGION}
   ```
 
 ### 5. Install the Controller using Helm
@@ -262,10 +262,10 @@ To avoid incurring ongoing AWS charges, clean up the cluster and ECR repository 
   kubectl delete -f k8s/
 
   # 2. Delete EKS Cluster
-  eksctl delete cluster --name myspace-cluster --region $AWS_REGION
+  eksctl delete cluster --name myspace-cluster --region ${AWS_REGION}
 
   # 3. Delete ECR Repository
-  aws ecr delete-repository --repository-name $REPO_NAME --force --region $AWS_REGION
+  aws ecr delete-repository --repository-name ${REPO_NAME} --force --region ${AWS_REGION}
   ```
 * **Bash (Linux/Mac/Git Bash):**
   ```bash
@@ -273,8 +273,8 @@ To avoid incurring ongoing AWS charges, clean up the cluster and ECR repository 
   kubectl delete -f k8s/
 
   # 2. Delete EKS Cluster
-  eksctl delete cluster --name myspace-cluster --region $AWS_REGION
+  eksctl delete cluster --name myspace-cluster --region ${AWS_REGION}
 
   # 3. Delete ECR Repository
-  aws ecr delete-repository --repository-name $REPO_NAME --force --region $AWS_REGION
+  aws ecr delete-repository --repository-name ${REPO_NAME} --force --region ${AWS_REGION}
   ```
