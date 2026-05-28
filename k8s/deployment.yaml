@@ -17,7 +17,7 @@ spec:
       containers:
       - name: myspace
         # Placeholder image URL - will be replaced with actual ECR image path
-        image: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/myspace:latest
+        image: 514661752885.dkr.ecr.ap-south-1.amazonaws.com/myspace:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
