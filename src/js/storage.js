@@ -5,7 +5,10 @@
 const STORAGE_KEYS = {
   TASKS: 'myspace_tasks',
   CANVAS_ITEMS: 'myspace_canvas_items',
+  CANVAS_STROKES: 'myspace_canvas_strokes',
   CHAT_LOGS: 'myspace_chat_logs',
+  HABITS: 'myspace_habits',
+  AGENDA: 'myspace_agenda',
   SETTINGS: 'myspace_settings'
 };
 
@@ -98,19 +101,27 @@ const DEFAULT_CHAT_LOGS = [
   {
     id: 'chat-1',
     text: 'Launched the MySpace workspace portal today! Persistent storage is online. #release #milestone',
-    timestamp: new Date(Date.now() - 3600000 * 24).toISOString() // 24 hours ago
+    timestamp: new Date(Date.now() - 3600000 * 24).toISOString()
   },
   {
     id: 'chat-2',
     text: 'Added support for draggable nodes. Currently exploring Chart.js responsiveness inside resizable boxes. #dev #canvas',
-    timestamp: new Date(Date.now() - 3600000 * 4).toISOString() // 4 hours ago
+    timestamp: new Date(Date.now() - 3600000 * 4).toISOString()
   },
   {
     id: 'chat-3',
     text: 'Need to structure Kanban columns. Decided on Waiting, Doing, Partial, and Completed. #todo',
-    timestamp: new Date(Date.now() - 600000).toISOString() // 10 mins ago
+    timestamp: new Date(Date.now() - 600000).toISOString()
   }
 ];
+
+const DEFAULT_HABITS = [
+  { id: 'habit-1', name: 'Exercise', color: '#2eaadc', completions: {} },
+  { id: 'habit-2', name: 'Read',     color: '#378357', completions: {} },
+  { id: 'habit-3', name: 'Code',     color: '#c69026', completions: {} }
+];
+
+const DEFAULT_AGENDA = {}; // keyed by ISO date string "YYYY-MM-DD"
 
 const DEFAULT_SETTINGS = {
   coverImage: 'https://images.unsplash.com/photo-1486873249359-2731bd6dafc7?q=80&w=1600&auto=format&fit=crop',
@@ -119,13 +130,17 @@ const DEFAULT_SETTINGS = {
     dashboard: 'Dashboard',
     todo: 'To-Do Board',
     canvas: 'Sandbox Canvas',
-    journal: 'Project Log'
+    journal: 'Project Log',
+    habits: 'Habit Tracker',
+    agenda: 'Weekly Agenda'
   },
   pageSubtitles: {
     dashboard: 'Your personal control center. Only you exist here.',
     todo: 'Manage tasks and track completion status across columns.',
     canvas: 'Draw, place notes, and visualize details on an interactive board.',
-    journal: 'A timeline stream of your daily logs, thoughts, and updates.'
+    journal: 'A timeline stream of your daily logs, thoughts, and updates.',
+    habits: 'Track your daily habits with a GitHub-style activity grid.',
+    agenda: 'Plan your week with a clean, scrollable weekly planner.'
   },
   activeView: 'dashboard',
   sidebarCollapsed: false
@@ -171,23 +186,37 @@ if (!canvasItems) {
   saveToStorage(STORAGE_KEYS.CANVAS_ITEMS, canvasItems);
 }
 
+let canvasStrokes = loadFromStorage(STORAGE_KEYS.CANVAS_STROKES, []);
+
 let chatLogs = loadFromStorage(STORAGE_KEYS.CHAT_LOGS, null);
 if (!chatLogs) {
   chatLogs = DEFAULT_CHAT_LOGS;
   saveToStorage(STORAGE_KEYS.CHAT_LOGS, chatLogs);
 }
 
+let habits = loadFromStorage(STORAGE_KEYS.HABITS, null);
+if (!habits) {
+  habits = DEFAULT_HABITS;
+  saveToStorage(STORAGE_KEYS.HABITS, habits);
+}
+
+let agendaEvents = loadFromStorage(STORAGE_KEYS.AGENDA, DEFAULT_AGENDA);
+
 let settings = loadFromStorage(STORAGE_KEYS.SETTINGS, null);
 if (!settings) {
   settings = DEFAULT_SETTINGS;
+  saveToStorage(STORAGE_KEYS.SETTINGS, settings);
+} else {
+  // Merge any missing keys from defaults (for existing installs)
+  settings = { ...DEFAULT_SETTINGS, ...settings };
+  settings.pageTitles = { ...DEFAULT_SETTINGS.pageTitles, ...settings.pageTitles };
+  settings.pageSubtitles = { ...DEFAULT_SETTINGS.pageSubtitles, ...settings.pageSubtitles };
   saveToStorage(STORAGE_KEYS.SETTINGS, settings);
 }
 
 export const Storage = {
   // Tasks Store
-  getTasks() {
-    return tasks;
-  },
+  getTasks() { return tasks; },
   saveTasks(newTasks) {
     tasks = newTasks;
     saveToStorage(STORAGE_KEYS.TASKS, tasks);
@@ -195,29 +224,52 @@ export const Storage = {
   },
 
   // Canvas Store
-  getCanvasItems() {
-    return canvasItems;
-  },
+  getCanvasItems() { return canvasItems; },
   saveCanvasItems(newItems) {
     canvasItems = newItems;
     saveToStorage(STORAGE_KEYS.CANVAS_ITEMS, canvasItems);
     broadcastChange('canvas', canvasItems);
   },
 
-  // Chat/Journal Store
-  getChatLogs() {
-    return chatLogs;
+  // Canvas Drawing Strokes Store
+  getCanvasStrokes() { return canvasStrokes; },
+  saveCanvasStrokes(strokes) {
+    canvasStrokes = strokes;
+    try {
+      saveToStorage(STORAGE_KEYS.CANVAS_STROKES, strokes);
+    } catch (e) {
+      console.warn('Canvas strokes too large for localStorage, clearing old strokes.');
+      canvasStrokes = strokes.slice(-50); // Keep last 50 strokes on overflow
+      saveToStorage(STORAGE_KEYS.CANVAS_STROKES, canvasStrokes);
+    }
   },
+
+  // Chat/Journal Store
+  getChatLogs() { return chatLogs; },
   saveChatLogs(newLogs) {
     chatLogs = newLogs;
     saveToStorage(STORAGE_KEYS.CHAT_LOGS, chatLogs);
     broadcastChange('chat', chatLogs);
   },
 
-  // Settings Store
-  getSettings() {
-    return settings;
+  // Habits Store
+  getHabits() { return habits; },
+  saveHabits(newHabits) {
+    habits = newHabits;
+    saveToStorage(STORAGE_KEYS.HABITS, habits);
+    broadcastChange('habits', habits);
   },
+
+  // Agenda Store
+  getAgendaEvents() { return agendaEvents; },
+  saveAgendaEvents(newEvents) {
+    agendaEvents = newEvents;
+    saveToStorage(STORAGE_KEYS.AGENDA, agendaEvents);
+    broadcastChange('agenda', agendaEvents);
+  },
+
+  // Settings Store
+  getSettings() { return settings; },
   saveSettings(newSettings) {
     settings = { ...settings, ...newSettings };
     saveToStorage(STORAGE_KEYS.SETTINGS, settings);

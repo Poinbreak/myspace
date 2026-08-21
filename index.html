@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>MySpace // Your Personal Cosmos</title>
+  <meta name="description" content="MySpace — your personal all-in-one workspace with tasks, habits, canvas, agenda, and project logs.">
   <!-- Google Fonts: Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +17,9 @@
   <link rel="stylesheet" href="/src/css/style.css">
 </head>
 <body>
+  <!-- Mobile Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
   <div class="app-container">
     <!-- Sidebar Navigation -->
     <aside class="sidebar" id="app-sidebar">
@@ -42,8 +46,16 @@
           <i data-lucide="kanban-square"></i>
           <span>To-Do Board</span>
         </a>
+        <a href="#habits" class="nav-item" data-view="habits">
+          <i data-lucide="activity"></i>
+          <span>Habit Tracker</span>
+        </a>
+        <a href="#agenda" class="nav-item" data-view="agenda">
+          <i data-lucide="calendar-days"></i>
+          <span>Weekly Agenda</span>
+        </a>
         <a href="#canvas" class="nav-item" data-view="canvas">
-          <i data-lucide="layout-grid"></i>
+          <i data-lucide="pen-tool"></i>
           <span>Sandbox Canvas</span>
         </a>
         <a href="#journal" class="nav-item" data-view="journal">
@@ -55,13 +67,18 @@
       <div class="sidebar-footer">
         <div class="version-tag">
           <i data-lucide="book-open"></i>
-          <span>MySpace v1.0.0</span>
+          <span>MySpace v2.0</span>
         </div>
       </div>
     </aside>
 
     <!-- Main Workspace Content -->
     <main class="main-content">
+      <!-- Mobile Menu Button -->
+      <button class="mobile-menu-btn" id="mobile-menu-btn" title="Open Menu">
+        <i data-lucide="menu"></i>
+      </button>
+
       <!-- Notion Cover Banner -->
       <div class="cover-banner-wrapper" id="cover-banner-container">
         <div class="cover-image" id="cover-banner-img" style="background-image: url('https://images.unsplash.com/photo-1486873249359-2731bd6dafc7?q=80&w=1600&auto=format&fit=crop');"></div>
@@ -70,27 +87,48 @@
             <i data-lucide="image"></i>
             <span>Change Cover</span>
           </button>
-          <!-- Cover Presets Dropdown -->
+          <!-- Cover Dropdown Menu -->
           <div class="cover-dropdown hide" id="cover-dropdown-menu">
-            <button class="cover-preset" data-img="https://images.unsplash.com/photo-1486873249359-2731bd6dafc7?q=80&w=1600&auto=format&fit=crop">Foggy Forest</button>
-            <button class="cover-preset" data-img="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=1600&auto=format&fit=crop">Dune Shadows</button>
-            <button class="cover-preset" data-img="https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600&auto=format&fit=crop">Concrete Lines</button>
-            <button class="cover-preset" data-img="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=1600&auto=format&fit=crop">Minimal Office</button>
-            <button class="cover-preset" data-img="https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1600&auto=format&fit=crop">Solid Gray</button>
+            <div class="cover-dropdown-section">
+              <div class="cover-section-label">Upload</div>
+              <label class="cover-upload-label" for="cover-file-input">
+                <i data-lucide="upload"></i>
+                <span>Upload Image</span>
+                <input type="file" id="cover-file-input" accept="image/*" style="display:none;">
+              </label>
+            </div>
+            <div class="cover-dropdown-section">
+              <div class="cover-section-label">URL</div>
+              <div class="cover-url-row">
+                <input type="text" id="cover-url-input" placeholder="Paste image URL...">
+                <button id="cover-url-apply-btn" class="cover-url-apply">Apply</button>
+              </div>
+            </div>
+            <div class="cover-dropdown-section">
+              <div class="cover-section-label">Presets</div>
+              <div class="cover-presets-grid">
+                <button class="cover-preset" data-img="https://images.unsplash.com/photo-1486873249359-2731bd6dafc7?q=80&w=1600&auto=format&fit=crop" style="background-image:url('https://images.unsplash.com/photo-1486873249359-2731bd6dafc7?q=80&w=400&auto=format&fit=crop')">Foggy Forest</button>
+                <button class="cover-preset" data-img="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=1600&auto=format&fit=crop" style="background-image:url('https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=400&auto=format&fit=crop')">Dune Shadows</button>
+                <button class="cover-preset" data-img="https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600&auto=format&fit=crop" style="background-image:url('https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=400&auto=format&fit=crop')">Concrete</button>
+                <button class="cover-preset" data-img="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=1600&auto=format&fit=crop" style="background-image:url('https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=400&auto=format&fit=crop')">Office</button>
+                <button class="cover-preset" data-img="https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1600&auto=format&fit=crop" style="background-image:url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=400&auto=format&fit=crop')">Abstract</button>
+                <button class="cover-preset" data-img="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1600&auto=format&fit=crop" style="background-image:url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=400&auto=format&fit=crop')">Galaxy</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Workspace Page Header (Floating Icon & Title) -->
+      <!-- Workspace Page Header -->
       <header class="workspace-header">
         <div class="workspace-icon-wrapper">
           <div class="workspace-icon" id="page-emoji-btn" title="Change Icon">🚀</div>
-          <!-- Emoji Picker Panel -->
           <div class="emoji-picker hide" id="emoji-picker-menu">
             <div class="emoji-list">
               <span>🚀</span><span>🛰️</span><span>☄️</span><span>🌌</span><span>⭐</span><span>🔭</span><span>🪐</span>
               <span>🛸</span><span>👽</span><span>👾</span><span>💻</span><span>📝</span><span>🎯</span><span>💡</span>
               <span>🔥</span><span>⚡</span><span>🛠️</span><span>📊</span><span>📂</span><span>🎨</span><span>🔮</span>
+              <span>🌿</span><span>📅</span><span>✅</span><span>🎵</span><span>💪</span><span>🧠</span><span>📓</span>
             </div>
           </div>
         </div>
@@ -98,8 +136,7 @@
           <h1 class="workspace-title" id="page-title-text" contenteditable="true" spellcheck="false">Dashboard</h1>
           <span class="workspace-subtitle" id="page-subtitle-text">Your personal control center. Only you exist here.</span>
         </div>
-        
-        <!-- Toggle button to expand sidebar if collapsed -->
+        <!-- Desktop sidebar expand button -->
         <button class="sidebar-expand-btn hide" id="sidebar-expand-btn" title="Expand Sidebar">
           <i data-lucide="menu"></i>
         </button>
@@ -107,11 +144,11 @@
 
       <!-- View Containers -->
       <div class="view-container">
-        
+
         <!-- VIEW: DASHBOARD -->
         <section id="dashboard-view" class="workspace-view">
           <div class="dashboard-grid">
-            <!-- Greeting & Clock Glass Card -->
+            <!-- Greeting & Clock Card -->
             <div class="glass-card greeting-card col-span-2">
               <div class="clock-display">
                 <span class="time" id="dashboard-time">12:00:00</span>
@@ -175,7 +212,6 @@
           </div>
 
           <div class="kanban-board">
-            <!-- COLUMN: WAITING -->
             <div class="kanban-column" data-status="waiting">
               <div class="column-header">
                 <span class="column-pill count-waiting">0</span>
@@ -183,8 +219,6 @@
               </div>
               <div class="column-cards" id="cards-waiting"></div>
             </div>
-
-            <!-- COLUMN: DOING -->
             <div class="kanban-column" data-status="doing">
               <div class="column-header">
                 <span class="column-pill count-doing">0</span>
@@ -192,8 +226,6 @@
               </div>
               <div class="column-cards" id="cards-doing"></div>
             </div>
-
-            <!-- COLUMN: PARTIAL COMPLETE -->
             <div class="kanban-column" data-status="partial">
               <div class="column-header">
                 <span class="column-pill count-partial">0</span>
@@ -201,8 +233,6 @@
               </div>
               <div class="column-cards" id="cards-partial"></div>
             </div>
-
-            <!-- COLUMN: COMPLETED -->
             <div class="kanban-column" data-status="completed">
               <div class="column-header">
                 <span class="column-pill count-completed">0</span>
@@ -217,23 +247,18 @@
             <div class="glass-card modal-container">
               <div class="modal-header">
                 <h3 id="modal-title-text">Create Task</h3>
-                <button class="close-modal-btn" id="close-task-modal-btn">
-                  <i data-lucide="x"></i>
-                </button>
+                <button class="close-modal-btn" id="close-task-modal-btn"><i data-lucide="x"></i></button>
               </div>
               <div class="modal-body">
                 <input type="hidden" id="task-id-input">
-                
                 <div class="form-group">
                   <label for="task-title-input">Title</label>
                   <input type="text" id="task-title-input" placeholder="What needs to be done?" required>
                 </div>
-                
                 <div class="form-group">
                   <label for="task-desc-input">Description</label>
                   <textarea id="task-desc-input" rows="3" placeholder="Provide some details..."></textarea>
                 </div>
-                
                 <div class="form-row">
                   <div class="form-group flex-1">
                     <label for="task-status-input">Status</label>
@@ -244,7 +269,6 @@
                       <option value="completed">Completed</option>
                     </select>
                   </div>
-                  
                   <div class="form-group flex-1">
                     <label for="task-priority-input">Priority</label>
                     <select id="task-priority-input">
@@ -254,13 +278,11 @@
                     </select>
                   </div>
                 </div>
-
                 <div class="form-row">
                   <div class="form-group flex-1">
                     <label for="task-tags-input">Tags (comma separated)</label>
                     <input type="text" id="task-tags-input" placeholder="e.g. design, dev, research">
                   </div>
-                  
                   <div class="form-group flex-1">
                     <label for="task-date-input">Due Date</label>
                     <input type="date" id="task-date-input">
@@ -275,9 +297,134 @@
           </div>
         </section>
 
+        <!-- VIEW: HABIT TRACKER -->
+        <section id="habits-view" class="workspace-view hide">
+          <div class="habit-topbar">
+            <button class="primary-btn" id="add-habit-btn">
+              <i data-lucide="plus"></i>
+              <span>Add Habit</span>
+            </button>
+            <div class="habit-week-nav">
+              <button class="secondary-btn icon-only" id="habit-prev-week" title="Previous week">
+                <i data-lucide="chevron-left"></i>
+              </button>
+              <span id="habit-week-range" class="habit-week-label">Loading...</span>
+              <button class="secondary-btn icon-only" id="habit-next-week" title="Next week">
+                <i data-lucide="chevron-right"></i>
+              </button>
+              <button class="secondary-btn" id="habit-today-btn">Today</button>
+            </div>
+          </div>
+
+          <div id="habit-grid-container"></div>
+
+          <!-- Habit Modal -->
+          <div class="modal-overlay hide" id="habit-modal">
+            <div class="glass-card modal-container modal-sm">
+              <div class="modal-header">
+                <h3 id="habit-modal-title">New Habit</h3>
+                <button class="close-modal-btn" id="close-habit-modal-btn"><i data-lucide="x"></i></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="habit-name-input">Habit Name</label>
+                  <input type="text" id="habit-name-input" placeholder="e.g. Exercise, Read, Meditate...">
+                </div>
+                <div class="form-row">
+                  <div class="form-group flex-1">
+                    <label for="habit-emoji-input">Emoji (optional)</label>
+                    <input type="text" id="habit-emoji-input" placeholder="🏃" maxlength="2">
+                  </div>
+                  <div class="form-group flex-1">
+                    <label for="habit-color-input">Color</label>
+                    <input type="color" id="habit-color-input" value="#2eaadc" class="color-input-field">
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="secondary-btn text-danger hide" id="delete-habit-btn">Delete Habit</button>
+                <button class="primary-btn" id="save-habit-btn">Save</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: WEEKLY AGENDA -->
+        <section id="agenda-view" class="workspace-view hide">
+          <div class="agenda-controls">
+            <button class="secondary-btn" id="agenda-prev-week"><i data-lucide="chevron-left"></i></button>
+            <span id="agenda-week-range" class="agenda-week-label">Loading...</span>
+            <button class="secondary-btn" id="agenda-next-week"><i data-lucide="chevron-right"></i></button>
+            <button class="primary-btn" id="agenda-today-btn">Today</button>
+          </div>
+          <div class="agenda-grid" id="agenda-grid">
+            <!-- Day columns rendered by JS -->
+          </div>
+
+          <!-- Agenda Event Modal -->
+          <div class="modal-overlay hide" id="agenda-event-modal">
+            <div class="glass-card modal-container modal-sm">
+              <div class="modal-header">
+                <h3 id="agenda-modal-title">Add Event</h3>
+                <button class="close-modal-btn" id="close-agenda-modal-btn"><i data-lucide="x"></i></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="agenda-event-title">Title</label>
+                  <input type="text" id="agenda-event-title" placeholder="Event title...">
+                </div>
+                <div class="form-group">
+                  <label for="agenda-event-time">Time (optional)</label>
+                  <input type="time" id="agenda-event-time">
+                </div>
+                <div class="form-group">
+                  <label for="agenda-event-note">Note (optional)</label>
+                  <textarea id="agenda-event-note" rows="2" placeholder="Any details..."></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Color</label>
+                  <div class="agenda-color-picker-wrap" id="agenda-event-color-picker"></div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="secondary-btn text-danger hide" id="delete-agenda-event-btn">Delete</button>
+                <button class="primary-btn" id="save-agenda-event-btn">Save Event</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- VIEW: SANDBOX CANVAS -->
         <section id="canvas-view" class="workspace-view hide">
           <div class="canvas-toolbar">
+            <div class="toolbar-group">
+              <button class="toolbar-btn active" id="draw-select-btn" title="Select / Move">
+                <i data-lucide="mouse-pointer-2"></i>
+                <span>Select</span>
+              </button>
+              <button class="toolbar-btn" id="draw-pen-btn" title="Freehand Pen">
+                <i data-lucide="pen"></i>
+                <span>Draw</span>
+              </button>
+              <button class="toolbar-btn" id="draw-eraser-btn" title="Eraser">
+                <i data-lucide="eraser"></i>
+                <span>Erase</span>
+              </button>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-group drawing-tools-group" id="drawing-tools-group">
+              <input type="color" id="draw-color-picker" value="#e3e3e3" title="Pen color" class="draw-color-input">
+              <div class="size-slider-group">
+                <i data-lucide="minus" class="size-icon"></i>
+                <input type="range" id="draw-size-slider" min="1" max="20" value="3" class="draw-size-slider">
+                <i data-lucide="plus" class="size-icon"></i>
+              </div>
+              <button class="toolbar-btn text-danger" id="clear-drawing-btn" title="Clear all drawings">
+                <i data-lucide="pencil-off"></i>
+                <span>Clear Draw</span>
+              </button>
+            </div>
+            <div class="toolbar-divider"></div>
             <div class="toolbar-group">
               <button class="toolbar-btn" id="add-text-block-btn" title="Add Text Block">
                 <i data-lucide="file-text"></i>
@@ -295,12 +442,14 @@
                 <span>Clear All</span>
               </button>
             </div>
+            <div class="canvas-hint">Scroll to pan · Ctrl+Scroll to zoom · Middle-drag to pan</div>
           </div>
 
           <!-- The Infinite Canvas Area -->
           <div class="canvas-container">
+            <canvas id="draw-canvas"></canvas>
             <div class="canvas-grid" id="sandbox-canvas">
-              <!-- Draggable widgets will be inserted dynamically here -->
+              <!-- Draggable widgets inserted here dynamically -->
             </div>
           </div>
 
@@ -309,18 +458,14 @@
             <div class="glass-card modal-container">
               <div class="modal-header">
                 <h3>Configure Graph</h3>
-                <button class="close-modal-btn" id="close-graph-modal-btn">
-                  <i data-lucide="x"></i>
-                </button>
+                <button class="close-modal-btn" id="close-graph-modal-btn"><i data-lucide="x"></i></button>
               </div>
               <div class="modal-body">
                 <input type="hidden" id="graph-widget-id-input">
-                
                 <div class="form-group">
                   <label for="graph-title-input">Graph Title</label>
                   <input type="text" id="graph-title-input" placeholder="e.g. Monthly Revenue">
                 </div>
-
                 <div class="form-row">
                   <div class="form-group flex-1">
                     <label for="graph-type-input">Graph Type</label>
@@ -339,13 +484,10 @@
                     </select>
                   </div>
                 </div>
-
                 <div class="form-group">
                   <label>Data Points</label>
-                  <div class="data-points-list" id="data-points-container">
-                    <!-- Dynamic label-value inputs -->
-                  </div>
-                  <button class="secondary-btn btn-sm" id="add-data-point-btn" style="margin-top: 8px;">
+                  <div class="data-points-list" id="data-points-container"></div>
+                  <button class="secondary-btn btn-sm" id="add-data-point-btn" style="margin-top:8px;">
                     <i data-lucide="plus"></i> Add Point
                   </button>
                 </div>
@@ -361,7 +503,6 @@
         <section id="journal-view" class="workspace-view hide">
           <div class="journal-layout">
             <div class="journal-feed-area">
-              <!-- Update Input Area -->
               <div class="glass-card chat-input-card">
                 <div class="chat-input-wrapper">
                   <textarea id="chat-input" rows="2" placeholder="Post a project update, record a breakthrough, or share an idea... Use #tags to categorize."></textarea>
@@ -379,14 +520,8 @@
                   </div>
                 </div>
               </div>
-
-              <!-- Message Stream -->
-              <div class="chat-stream" id="chat-stream-container">
-                <!-- Chat log messages inserted here -->
-              </div>
+              <div class="chat-stream" id="chat-stream-container"></div>
             </div>
-
-            <!-- Journal Sidebar (Search & Statistics) -->
             <div class="journal-sidebar">
               <div class="glass-card sidebar-search-card">
                 <div class="search-input-wrapper">
@@ -394,12 +529,9 @@
                   <input type="text" id="journal-search-input" placeholder="Search logs or tags...">
                 </div>
               </div>
-
               <div class="glass-card tags-list-card">
                 <h3>Trending Tags</h3>
-                <div class="tags-cloud" id="journal-tags-cloud">
-                  <!-- Interactive tag buttons -->
-                </div>
+                <div class="tags-cloud" id="journal-tags-cloud"></div>
               </div>
             </div>
           </div>
